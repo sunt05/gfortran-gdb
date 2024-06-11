@@ -33,10 +33,26 @@ RUN adduser programmer sudo
 USER programmer
 WORKDIR /home/programmer
 
-# install what we need for gfortran debugging and minimal editing.
-RUN sudo apt-get install -yq git curl && \
-    sudo apt-get install --no-install-recommends -yq vim-tiny make cmake gfortran gdb && \
+# Install necessary tools for Fortran development, debugging, Python, and Mamba
+RUN sudo apt-get install -yq git curl bzip2 && \
+    sudo apt-get -yq install sudo git curl bzip2 vim-tiny make cmake gfortran gdb python3 python3-pip meson ninja-build libquadmath0 libquadmath-dev && \
     sudo apt-get clean -q
+
+# Install Mamba
+RUN curl -fsSL https://micro.mamba.pm/api/micromamba/linux-aarch64/latest | tar -xvj bin/micromamba && \
+    sudo mv bin/micromamba /usr/local/bin/micromamba && \
+    rm -rf bin
+
+# Create a conda environment directory
+RUN mkdir /home/programmer/mamba
+
+# Configure environment variables for Mamba
+ENV MAMBA_ROOT_PREFIX=/home/programmer/mamba
+ENV PATH=$MAMBA_ROOT_PREFIX/bin:$PATH
+
+# Initialize Micromamba in a non-interactive shell and create a base environment
+RUN /usr/local/bin/micromamba shell init -s bash -p $MAMBA_ROOT_PREFIX
+SHELL ["bash", "-c"]
 
 # use the following if needed to get parts needed for curcic's text:
 #
