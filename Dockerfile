@@ -34,8 +34,9 @@ USER programmer
 WORKDIR /home/programmer
 
 # Install necessary tools for Fortran development, debugging, Python, and Mamba
-RUN sudo apt-get install -yq git curl bzip2 && \
-    sudo apt-get -yq install sudo git curl bzip2 vim-tiny make cmake gfortran gdb python3 python3-pip meson ninja-build libquadmath0 libquadmath-dev && \
+RUN sudo apt-get -yq update && \
+    sudo apt-get -yq install git curl bzip2 vim-tiny make cmake pkg-config gfortran gdb python3 python3-pip && \
+    sudo apt-get -yq install meson ninja-build && \
     sudo apt-get clean -q
 
 # Install Mamba
