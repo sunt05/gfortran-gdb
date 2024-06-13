@@ -53,8 +53,11 @@ ENV PATH=$MAMBA_ROOT_PREFIX/bin:$PATH
 
 # Initialize Micromamba in a non-interactive shell and create a base environment
 RUN /usr/local/bin/micromamba shell init -s bash -p $MAMBA_ROOT_PREFIX
-SHELL ["bash", "-c"]
 
+COPY env.yml /home/programmer/
+RUN micromamba env create -f /home/programmer/env.yml
+
+SHELL ["bash", "-c"]
 # use the following if needed to get parts needed for curcic's text:
 #
 # from apt libcoarrays-dev libopenmpi-dev open-coarrays-bin
